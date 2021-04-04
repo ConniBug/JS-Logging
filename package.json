@@ -1,6 +1,6 @@
 {
-  "name": "js-logging",
-  "version": "1.0.0",
+  "name": "@connibug/js-logging",
+  "version": "1.0.1",
   "description": "basic js console logging",
   "main": "logging.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/ConniBug/JS-Logging/issues"
   },
-  "homepage": "https://github.com/ConniBug/JS-Logging#readme"
+  "homepage": "https://github.com/ConniBug/JS-Logging#readme",
+  "publishConfig": {
+	  "registry":"https://npm.pkg.github.com"
+	},
 }
