@@ -104,3 +104,5 @@ dist
 .tern-port
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
+.vs/JS-Logging/v16/.suo
+.vs/VSWorkspaceState.json
