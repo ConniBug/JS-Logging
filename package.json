@@ -1,0 +1,24 @@
+{
+  "name": "js-logging",
+  "version": "1.0.0",
+  "description": "basic js console logging",
+  "main": "logging.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConniBug/JS-Logging.git"
+  },
+  "keywords": [
+    "Logging",
+    "JS",
+    "Simple"
+  ],
+  "author": "Conni!~#0920 (conni@spookiebois.club)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ConniBug/JS-Logging/issues"
+  },
+  "homepage": "https://github.com/ConniBug/JS-Logging#readme"
+}
