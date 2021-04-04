@@ -1,3 +1,9 @@
+/*
+    Author: Conni!~#0920 (conni@spookiebois.club)
+    Github: https://github.com/ConniBug/JS-Logging
+
+*/
+
 const colors = require('colors');
 
 logLevel = "ALL";
