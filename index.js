@@ -7,9 +7,15 @@
 const mailLib = require("./mailer");
 
 const colors = require('colors');
-var sendMail = require("./functions/mailer").sendMail;
+var sendMail = require("./mailer").sendMail;
 var shouldMail = false;
+
+var isSetup = false;
+
 function setupMail(host, port, email, email_pass) {
+    if(isSetup) log("Already setup email server.");
+    isSetup = true;
+
     mailLib.setupMail(host, port, email, email_pass);  
     shouldMail = true
 }
@@ -91,7 +97,7 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
         }
         return tmp;
     }
-    console.log(StartMessage + balence(StartMessage) +  "-> " + message);
+    console.log(StartMessage + "] " + balence(StartMessage) +  "-> " + message);
 }
 exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
     log(message, type, callingFunction);
