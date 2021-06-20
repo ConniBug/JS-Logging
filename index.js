@@ -3,8 +3,9 @@
     Github: https://github.com/ConniBug/JS-Logging
 
 */
-
 const mailLib = require("./mailer");
+
+var callerId = require('caller-id');
 
 const colors = require('colors');
 var sendMail = require("./mailer").sendMail;
@@ -49,6 +50,11 @@ exports.getLogLevelNum = (level) => {
 };
 
 async function log(message, type = "DEBUG", callingFunction = "N/A") {
+    var caller = callerId.getData();
+    if(type == "ERROR") {
+        console.lof(caller);
+    }
+
     if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
     }
