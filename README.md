@@ -1,7 +1,7 @@
 # JS-Logging
 
 ```
-const logging = require("logging");
+const logging = require('@connibug/js-logging');
 
 logging.log(<message>, <type>);
 
