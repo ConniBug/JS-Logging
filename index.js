@@ -4,27 +4,46 @@
 
 */
 
-const colors = require('colors');
+const mailLib = require("./mailer");
 
-logLevel = "ALL";
+const colors = require('colors');
+var sendMail = require("./functions/mailer").sendMail;
+var shouldMail = false;
+function setupMail(host, port, email, email_pass) {
+    mailLib.setupMail(host, port, email, email_pass);  
+    shouldMail = true
+}
+exports.setupMail = (host, port, email, email_pass) => {
+    return setupMail(host, port, email, email_pass);
+}
+
+exports.setLogLevel = (Level) => logLevel = Level;
+logLevel = "LEGITALL";
+
 function getLogLevelNum(level) {
-    if(level == "TESTING")  return 0;
-    if(level == "GENERIC")  return 1;
-    if(level == "ERROR")    return 2;
-    if(level == "DEBUG")    return 3;
-    if(level == "ALL")      return 4;
+    if (level == "TESTING") return 0;
+    if (level == "GENERIC") return 2;
+    if (level == "WARNING") return 4;
+    if (level == "ERROR")   return 6;
+    if (level == "DEBUG")   return 8;
+    if (level == "VERBOSE") return 9;
+    if (level == "ALL")     return 15;
+  
+    // Debugging stuff.
+    if (level == "TIMINGS") return 20;
+  
+    if (level == "LEGITALL") return 100;
+  
     log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
     return 4;
-
 }
+
 exports.getLogLevelNum = (level) => {
     return getLogLevelNum(level);
-}
-function log(message, type = "DEBUG") {
-    if(getLogLevelNum(type) > getLogLevelNum(logLevel))
-    {
-        // console.log("Log level: " + getLogLevelNum(type));
-        // console.log("Config log level: " + getLogLevelNum(logLevel));
+};
+
+async function log(message, type = "DEBUG", callingFunction = "N/A") {
+    if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
     }
 
@@ -32,12 +51,35 @@ function log(message, type = "DEBUG") {
 
     time = getDateTime().yellow;
 
-    StartMessage = "";
-    if(type == "ERROR") StartMessage = (`[${time}] - [` + type.red + `]`);
-    else if(type == "GENERIC") StartMessage = (`[${time}] - [` + type.green + `]`);
-    else if(type == "DEBUG") StartMessage = (`[${time}] - [` + type.gray + `]`);
-    else if(type == "TESTING") StartMessage = (`[${time}] - [` + type.magenta + `]`);
-    else StartMessage = (`[${time}] - [` + type.gray + `]`);
+    if (callingFunction == "N/A") {
+        StartMessage = `[${time}] - [`;
+    } else {
+        StartMessage = `[${time}] - [${callingFunction.blue}] - [`;
+    }
+
+    if (type == "ERROR") {
+        StartMessage += type.red;
+        if(shouldMail) {
+            sendMail(
+            process.env.ADMIN_EMAIL,
+            `
+            Time: ${getDateTime()}
+            <br>
+            <br>
+            <div>
+            ${message}
+            </div>
+            `,
+            "Server Error"
+            );
+        }
+    } 
+    else if (type == "WARNING") StartMessage += type.blue;
+    else if (type == "GENERIC") StartMessage += type.green;
+    else if (type == "DEBUG") StartMessage += type.gray;
+    else if (type == "VERBOSE") StartMessage += type.rainbow;
+    else if (type == "TESTING") StartMessage += type.magenta;
+    else StartMessage += type.blue;
 
     left = maxSize - StartMessage.length;
     function balence() {
@@ -51,9 +93,22 @@ function log(message, type = "DEBUG") {
     }
     console.log(StartMessage + balence(StartMessage) +  "-> " + message);
 }
-exports.log = (message, type = "DEBUG") => {
-    return log(message, type);
+exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
+    log(message, type, callingFunction);
+}; 
+exports.verbose = async (message, callingFunction = "N/A") => {
+    log(message, "VERBOSE", callingFunction);
 }
+exports.error = async (message, callingFunction = "N/A") => {
+    log(message, "ERROR", callingFunction);
+}; 
+exports.warning = async (message, callingFunction = "N/A") => {
+    log(message, "WARNING", callingFunction);
+};
+exports.debug = async (message, callingFunction = "N/A") => {
+    log(message, "DEBUG", callingFunction);
+};
+
 function char_count(str, letter)  {
     var letter_Count = 0;
     for (var position = 0; position < str.length; position++) {

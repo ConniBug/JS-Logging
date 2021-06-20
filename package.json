@@ -23,5 +23,8 @@
   "homepage": "https://github.com/ConniBug/JS-Logging#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "nodemailer": "^6.6.2"
   }
 }

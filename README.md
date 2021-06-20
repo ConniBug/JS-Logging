@@ -2,8 +2,12 @@
 
 ```
 const logging = require('@connibug/js-logging');
+logging.setupMail("mail.example.com", 578, "mailer.example.com", "Password");
+logging.setLogLevel("ALL");
 
-logging.log(<message>, <type>);
+logging.verbose("STUFF", "ERROR", "main.js");
+
+logging.log(<message>, <type>, <calling function>);
 
 logging.log("Loggggginggg");            // Defaults to DEBUG type.
 logging.log("Loggggginggg", "TESTING);
