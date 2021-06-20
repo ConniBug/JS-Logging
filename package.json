@@ -1,6 +1,6 @@
 {
   "name": "@connibug/js-logging",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A simple to use JavaScript module for console logging <3",
   "main": "logging.js",
   "scripts": {
