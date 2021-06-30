@@ -1,19 +1,17 @@
 # JS-Logging
 
+A simple logging pckage that has built in email reporting and file logging.
 ```
 const logging = require('@connibug/js-logging');
 logging.setupMail("mail.example.com", 578, "mailer.example.com", "Password");
 logging.setLogLevel("ALL");
 
-logging.verbose("STUFF", "ERROR", "main.js");
+logging.verbose(<message>, <calling function>);
+logging.error(<message>, <calling function>);
+logging.warning(<message>, <calling function>);
+logging.debug(<message>, <calling function>);
 
 logging.log(<message>, <type>, <calling function>);
-
-logging.log("Loggggginggg");            // Defaults to DEBUG type.
-logging.log("Loggggginggg", "TESTING);
-logging.log("Loggggginggg", "GENERIC);
-logging.log("Loggggginggg", "ERROR);
-logging.log("Loggggginggg", "DEBUG);
 ```
 
 ```

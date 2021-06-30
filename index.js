@@ -14,7 +14,7 @@ var shouldMail = false;
 var isSetup = false;
 
 function setupMail(host, port, email, email_pass) {
-    if(isSetup) log("Already setup email server.");
+    if(isSetup) log("Already setup email server.", "ERROR");
     isSetup = true;
 
     mailLib.setupMail(host, port, email, email_pass);  
@@ -50,11 +50,6 @@ exports.getLogLevelNum = (level) => {
 };
 
 async function log(message, type = "DEBUG", callingFunction = "N/A") {
-    var caller = callerId.getData();
-    if(type == "ERROR") {
-        console.lof(caller);
-    }
-
     if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
     }
@@ -106,12 +101,18 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
     console.log(StartMessage + "] " + balence(StartMessage) +  "-> " + message);
 }
 exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
+    var caller = callerId.getData();
+    if(type == "ERROR") {
+        console.log(caller);
+    }
     log(message, type, callingFunction);
 }; 
 exports.verbose = async (message, callingFunction = "N/A") => {
     log(message, "VERBOSE", callingFunction);
 }
 exports.error = async (message, callingFunction = "N/A") => {
+    var caller = callerId.getData();
+    console.log(caller);
     log(message, "ERROR", callingFunction);
 }; 
 exports.warning = async (message, callingFunction = "N/A") => {
