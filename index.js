@@ -5,35 +5,37 @@
 */
 const mailLib = require("./mailer");
 
+const { getDateTime } = require("./Utils");
+
 var callerId = require('caller-id');
 
+var strip = require('strip-color');  
 const colors = require('colors');
+var fileLogger = require("./fileLogger");
 var sendMail = require("./mailer").sendMail;
 var shouldMail = false;
+var isMailSetup = false;
+var isFileSetup = false;
 
-var isSetup = false;
-
+function setupFileLogging(root) {
+    isFileSetup = true;
+    fileLogger.setupFileLogger(root);
+}
 function setupMail(host, port, email, email_pass) {
-    if(isSetup) log("Already setup email server.", "ERROR");
-    isSetup = true;
+    if(isMailSetup) log("Already setup email server.", "ERROR");
+    isMailSetup = true;
 
     mailLib.setupMail(host, port, email, email_pass);  
-    shouldMail = true
 }
-exports.setupMail = (host, port, email, email_pass) => {
-    return setupMail(host, port, email, email_pass);
-}
-
-exports.setLogLevel = (Level) => logLevel = Level;
 logLevel = "LEGITALL";
-
 function getLogLevelNum(level) {
     if (level == "TESTING") return 0;
     if (level == "GENERIC") return 2;
-    if (level == "WARNING") return 4;
-    if (level == "ERROR")   return 6;
-    if (level == "DEBUG")   return 8;
+    if (level == "DEBUG")   return 3;
+    if (level == "WARNING") return 5;
+    if (level == "ERROR")   return 7;
     if (level == "VERBOSE") return 9;
+    if (level == "CRITICAL") return 11;
     if (level == "ALL")     return 15;
   
     // Debugging stuff.
@@ -45,16 +47,11 @@ function getLogLevelNum(level) {
     return 4;
 }
 
-exports.getLogLevelNum = (level) => {
-    return getLogLevelNum(level);
-};
-
-async function log(message, type = "DEBUG", callingFunction = "N/A") {
+async function log(message, caller, type = "DEBUG", callingFunction = "N/A") {
     if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
     }
-
-    maxSize = 55
+    maxSize = 54
 
     time = getDateTime().yellow;
 
@@ -65,27 +62,19 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
     }
 
     if (type == "ERROR") {
+        console.log(caller);
+
         StartMessage += type.red;
-        if(shouldMail) {
-            sendMail(
-            process.env.ADMIN_EMAIL,
-            `
-            Time: ${getDateTime()}
-            <br>
-            <br>
-            <div>
-            ${message}
-            </div>
-            `,
-            "Server Error"
-            );
+        if(isMailSetup) {
+            sendMail(message, "Server Error");
         }
-    } 
+    }
     else if (type == "WARNING") StartMessage += type.blue;
     else if (type == "GENERIC") StartMessage += type.green;
     else if (type == "DEBUG") StartMessage += type.gray;
     else if (type == "VERBOSE") StartMessage += type.rainbow;
     else if (type == "TESTING") StartMessage += type.magenta;
+    else if (type == "CRITICAL") StartMessage += type.bgRed
     else StartMessage += type.blue;
 
     left = maxSize - StartMessage.length;
@@ -98,65 +87,48 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
         }
         return tmp;
     }
-    console.log(StartMessage + "] " + balence(StartMessage) +  "-> " + message);
-}
-exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
-    var caller = callerId.getData();
-    if(type == "ERROR") {
-        console.log(caller);
+    let toLog = StartMessage + "] " + balence(StartMessage) +  "-> " + message;
+    if(isFileSetup) {
+        fileLogger.logToFile(strip(toLog));
     }
-    log(message, type, callingFunction);
-}; 
-exports.verbose = async (message, callingFunction = "N/A") => {
-    log(message, "VERBOSE", callingFunction);
+    console.log(toLog);
 }
-exports.error = async (message, callingFunction = "N/A") => {
-    var caller = callerId.getData();
-    console.log(caller);
-    log(message, "ERROR", callingFunction);
-}; 
-exports.warning = async (message, callingFunction = "N/A") => {
-    log(message, "WARNING", callingFunction);
-};
-exports.debug = async (message, callingFunction = "N/A") => {
-    log(message, "DEBUG", callingFunction);
-};
 
-function char_count(str, letter)  {
-    var letter_Count = 0;
-    for (var position = 0; position < str.length; position++) {
-        if (str.charAt(position) == letter) {
-            letter_Count += 1;
-        }
+module.exports = {
+    setupFileLogging: (root) => {
+        return setupFileLogging(root);
+    },
+    setupMail: (host, port, email, email_pass) => {
+        return setupMail(host, port, email, email_pass);
+    },
+    setLogLevel: (Level) => {
+        logLevel = Level
+    },
+    getLogLevelNum: (level) => {
+        return getLogLevelNum(level);
+    },
+    log: async (message, type = "GENERIC", callingFunction = "N/A") => {        
+        log(message, callerId.getData(), type, callingFunction);
+    },
+    verbose: async (message, callingFunction = "N/A") => {
+        log(message, callerId.getData(), "VERBOSE", callingFunction);
+    },
+    error: async (message, callingFunction = "N/A") => {
+        log(message, callerId.getData(), "ERROR", callingFunction);
+    },
+    warning: async (message, callingFunction = "N/A") => {
+        log(message, callerId.getData(), "WARNING", callingFunction);
+    },
+    debug: async (message, callingFunction = "N/A") => {
+        log(message, callerId.getData(), "DEBUG", callingFunction);
+    },
+    critical: async (message, callingFunction = "N/A") => {
+        log(message, callerId.getData(), "CRITICAL", callingFunction);
+    },
+    char_count: (str, letter) => {
+        return char_count(str, letter);
+    },
+    getDateTime: () => {
+        return getDateTime();
     }
-    return letter_Count;
-}
-exports.char_count = (str, letter) => {
-    return char_count(str, letter);
-}
-function getDateTime() {
-
-    var date = new Date();
-
-    var hour = date.getHours();
-    hour = (hour < 10 ? "0" : "") + hour;
-
-    var min  = date.getMinutes();
-    min = (min < 10 ? "0" : "") + min;
-
-    var sec  = date.getSeconds();
-    sec = (sec < 10 ? "0" : "") + sec;
-
-    var year = date.getFullYear();
-
-    var month = date.getMonth() + 1;
-    month = (month < 10 ? "0" : "") + month;
-
-    var day  = date.getDate();
-    day = (day < 10 ? "0" : "") + day;
-
-    return (year + ":" + month + ":" + day + " - " + hour + ":" + min + ":" + sec);
-}
-exports.getDateTime = () => {
-    return getDateTime();
-}
+};

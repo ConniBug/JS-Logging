@@ -1,3 +1,4 @@
+const { getDateTime } = require("./Utils");
 var nodemailer = require("nodemailer");
 var transporter;
 
@@ -7,14 +8,22 @@ module.exports.setupMail = async (host_t, port_t, email_t, email_pass_t) => {
         port: port_t,
         auth: { user: email_t, pass: email_pass_t },
     });
+    return true;
 }
 
-module.exports.sendMail = async (to_t, content, subject = "Tranquility") => {
+module.exports.sendMail = async (message, subject = "Tranquility") => {
   var mailOptions = {
     from: process.env.EMAIL,
-    to: to_t,
+    to: process.env.ADMIN_EMAIL,
     subject: `${subject}`,
-    html: `${content}`, // html body
+    html: `
+    Time: ${getDateTime()}
+    <br>
+    <br>
+    <div>
+      ${message}
+    </div>
+    `, // html body
     // text: 'That was easy!',
   };
 
