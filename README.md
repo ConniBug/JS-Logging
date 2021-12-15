@@ -5,6 +5,7 @@ A simple logging pckage that has built in email reporting and file logging.
 ```
 const logging = require('@connibug/js-logging');
 logging.setupMail("mail.example.com", 578, "mailer@example.com", "Password");
+
 logging.setLogLevel("ALL");
 
 logging.verbose(<message>);
