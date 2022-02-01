@@ -11,7 +11,7 @@ module.exports.setupMail = async (host_t, port_t, email_t, email_pass_t) => {
     return true;
 }
 
-module.exports.sendMail = async (message, subject = "Tranquility") => {
+module.exports.sendMail = async (message, subject = "ConniBug/JS-Logging") => {
   var mailOptions = {
     from: process.env.EMAIL,
     to: process.env.ADMIN_EMAIL,
