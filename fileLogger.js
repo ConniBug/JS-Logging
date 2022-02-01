@@ -1,7 +1,7 @@
+const cron = require('node-cron');
 const { getDateTime } = require("./Utils");
 const fs = require('fs');
-var setup = false
-var logFilePath = "";
+var logFilePath = "./";
 
 function makeDirIfNotExist(path) {
     if(!fs.existsSync(path)) {
@@ -10,19 +10,13 @@ function makeDirIfNotExist(path) {
 }
 
 function getNewLogFilePath(root, date = new Date()) {  
-    if(!root) {
-        console.error("Log root not defined.")
-        process.exit(1)
-    }
-    let path = root + "./logs";
+    let path = root + "./logs/" + date.getFullYear();
 
-    path += "/" + date.getFullYear();
-
-    var month = date.getMonth() + 1;
+    let month = date.getMonth() + 1;
     month = (month < 10 ? "0" : "") + month;
     path += "/" + month;
 
-    var day  = date.getDate();
+    let day  = date.getDate();
     day = (day < 10 ? "0" : "") + day;
     path += "/" + day + "/";
 
@@ -32,24 +26,23 @@ function getNewLogFilePath(root, date = new Date()) {
 }
 
 function getNewLogFileName(date = new Date()) {
-    var epoch  = date.getTime();
-    let name = "./" + epoch + ".log";
-    return name;
+    return "./" + date.getTime() + ".log";
 }
 
 module.exports.setupFileLogger = async (root) => {
+    if(!root) {
+        console.error("[fileLogger.js] root dir not defined.")
+        process.exit(1)
+    }
+    
     let curDate = new Date()
     logPath = getNewLogFilePath(root, curDate);
     logFileName = getNewLogFileName(curDate);
     logFilePath = logPath + logFileName;
-    //console.log(logFilePath);
-    setup = true;
     return true;
 }
 
 module.exports.logToFile = async (content) => {
-    if(!setup) return false;
-
     try {
         fs.appendFileSync(logFilePath, content + "\n")
     } catch (err) {
@@ -57,8 +50,7 @@ module.exports.logToFile = async (content) => {
     }
 }
 
-var cron = require('node-cron');
-
+// Setup a new file to log to every X
 var task = cron.schedule('0 0 */1 * * *', () =>  {
   this.setupFileLogger("./");
 });
