@@ -1,11 +1,16 @@
-# JS-Logging
+# JS-Logging - html
 
-A simple logging pckage that has built in email reporting and file logging.
+A simple html console logging package.
 
+Locally include and serve js file.
 ```
-const logging = require('@connibug/js-logging');
-logging.setupMail("mail.example.com", 578, "mailer@example.com", "Password");
-
+<script src="logging.js" integrity="sha256-vVXQ47i8WnKD800ntWYlhzd1a1Xw6fQKkCnVyQEthJU="></script>
+```
+Remotely include and server js file.
+```
+<script src="https://raw.githubusercontent.com/ConniBug/JS-Logging/html/logging_html.js" integrity="sha256-vVXQ47i8WnKD800ntWYlhzd1a1Xw6fQKkCnVyQEthJU=" crossorigin="anonymous"></script>
+```
+```
 logging.setLogLevel("ALL");
 
 logging.verbose(<message>);
@@ -18,8 +23,6 @@ logging.log(<message>, <type>);
 ```
 
 ```
-const { log, critical } = require("logging").log;
-
 log("Thing");
 critical("Thing");
 ```
