@@ -1,7 +1,9 @@
 # JS-Logging
-
 A simple logging pckage that has built in email reporting and file logging.
 
+HTML Varient is available within the HTML Branch
+
+## Usage
 ```
 const logging = require('@connibug/js-logging');
 logging.setupMail("mail.example.com", 578, "mailer@example.com", "Password");
