@@ -1,6 +1,6 @@
 {
   "name": "@connibug/js-logging",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A simple to use JavaScript module for console logging <3",
   "main": "logging.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "JS",
     "Simple"
   ],
-  "author": "Conni!~#0920 (conni@spookiebois.club)",
+  "author": "Conni!~#4121 (conni@spookiebois.club)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ConniBug/JS-Logging/issues"
@@ -28,6 +28,7 @@
     "caller-id": "^0.1.0",
     "colors": "^1.4.0",
     "colours": "^0.6.0-2",
+    "express": "^4.18.1",
     "node-cron": "^3.0.0",
     "nodemailer": "^6.6.2",
     "strip-color": "^0.1.0"

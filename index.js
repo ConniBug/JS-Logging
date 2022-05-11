@@ -94,7 +94,26 @@ async function log(message, caller, type = "DEBUG", callingFunction = "N/A") {
     console.log(toLog);
 }
 
+function setupWebPanel() {
+    const express = require("express")
+    const app = express()
+    let PORT = 1321;
+    
+    app.get("/latest", (req, res) => {
+        const fs = require("fs");
+        let data = fs.readFileSync(fileLogger.logFilePath, "utf8").toString().replace(/\n/g, "<br>");
+
+        res.send(data);
+        res.status(200);
+    });
+    
+    app.listen(PORT, () => console.log(`Started listener on port ${PORT}`));
+    
+}
 module.exports = {
+    setupWebPanel: () => {
+        return setupWebPanel();
+    },
     setupFileLogging: (root) => {
         return setupFileLogging(root);
     },

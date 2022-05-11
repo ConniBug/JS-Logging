@@ -42,8 +42,10 @@ module.exports.setupFileLogger = async (root) => {
     return true;
 }
 
+module.exports.logFilePath = "sss";
 module.exports.logToFile = async (content) => {
     try {
+        this.logFilePath = logFilePath;
         fs.appendFileSync(logFilePath, content + "\n")
     } catch (err) {
         console.error(err)

@@ -1,4 +1,5 @@
 const l = require('./index.js')
+const test2 = require('./testing2.js')
 l.setLogLevel("ALL");
 l.setupFileLogging("./")
 
@@ -17,3 +18,6 @@ const { log, critical } = require("./index.js");
 
 log("Thing");
 critical("Thing");
+
+l.setupWebPanel();
+test2.go();
