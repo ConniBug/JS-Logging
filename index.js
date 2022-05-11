@@ -21,11 +21,11 @@ function setupFileLogging(root) {
     isFileSetup = true;
     fileLogger.setupFileLogger(root);
 }
-function setupMail(host, port, email, email_pass) {
+function setupMail(host, port, email, email_pass, send_to) {
     if(isMailSetup) log("Already setup email server.", "ERROR");
     isMailSetup = true;
 
-    mailLib.setupMail(host, port, email, email_pass);  
+    mailLib.setupMail(host, port, email, email_pass, send_to);  
 }
 logLevel = "LEGITALL";
 function getLogLevelNum(level) {
@@ -117,8 +117,8 @@ module.exports = {
     setupFileLogging: (root) => {
         return setupFileLogging(root);
     },
-    setupMail: (host, port, email, email_pass) => {
-        return setupMail(host, port, email, email_pass);
+    setupMail: (host, port, email, email_pass, send_to) => {
+        return setupMail(host, port, email, email_pass, send_to);
     },
     setLogLevel: (Level) => {
         logLevel = Level

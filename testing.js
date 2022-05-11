@@ -1,7 +1,8 @@
 const l = require('./index.js')
 const test2 = require('./testing2.js')
 l.setLogLevel("ALL");
-l.setupFileLogging("./")
+l.setupFileLogging("./");
+l.setupMail("host", sslport, "sender_email", "sender_email_password", "email to email");
 
 l.log("=====================");
 l.log("Starting tests.");
